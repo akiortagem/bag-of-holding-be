@@ -13,7 +13,7 @@ func CheckHealthHandler(c *gin.Context, di di.HealthDI) {
 	isOK := di.HealthChecker.CheckHealth()
 
 	if !isOK {
-		log.Fatalf("Health check is not OK")
+		log.Printf("Health check is not OK")
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Health check is not OK",
 		})
