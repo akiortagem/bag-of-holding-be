@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/akiortagem/bag-of-holding-be/internal/features/health/di"
+	"github.com/akiortagem/bag-of-holding-be/internal/features/health/usecase"
 	"github.com/gin-gonic/gin"
 )
 
-func CheckHealthHandler(c *gin.Context, di di.HealthDI) {
+func CheckHealthHandler(c *gin.Context, hc usecase.HealthChecker) {
 
-	isOK := di.HealthChecker.CheckHealth()
+	isOK := hc.CheckHealth()
 
 	if !isOK {
 		log.Printf("Health check is not OK")
