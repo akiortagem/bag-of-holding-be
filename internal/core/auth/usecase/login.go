@@ -46,7 +46,7 @@ func (u *LoginUserUsecase) LoginUser(ctx context.Context, payload []byte, cfg co
 		return domain.UserLoginResponse{}, &LoginFailedError{}
 	}
 
-	token, err := MakeJWT(dbUser.ID, time.Duration(3600), cfg.JWTIssuer, cfg.Secret)
+	token, err := MakeJWT(dbUser.ID, time.Duration(3600)*time.Second, cfg.JWTIssuer, cfg.Secret)
 
 	if err != nil {
 		return domain.UserLoginResponse{}, err
@@ -61,7 +61,7 @@ func (u *LoginUserUsecase) LoginUser(ctx context.Context, payload []byte, cfg co
 	if _, err := u.Service.CreateRefreshToken(ctx, domain.RefreshTokenCreateParams{
 		Token:     rtVal,
 		UserID:    dbUser.ID,
-		ExpiresAt: time.Now().Add(time.Duration(3600)),
+		ExpiresAt: time.Now().Add(time.Duration(3600) * time.Second),
 	}); err != nil {
 		return domain.UserLoginResponse{}, err
 	}
