@@ -19,7 +19,6 @@ func main() {
 		log.Printf("Failed to load .env: %v", err)
 	}
 	dsn := os.Getenv("DATABASE_URL")
-	log.Printf("dsn is : %v", dsn)
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
