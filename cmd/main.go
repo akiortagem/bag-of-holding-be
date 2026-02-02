@@ -7,6 +7,7 @@ import (
 
 	auth "github.com/akiortagem/bag-of-holding-be/internal/core/auth/interfaces/http"
 	"github.com/akiortagem/bag-of-holding-be/internal/core/config"
+	characters "github.com/akiortagem/bag-of-holding-be/internal/features/characters/interfaces/http"
 	health "github.com/akiortagem/bag-of-holding-be/internal/features/health/interfaces/http/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -39,6 +40,7 @@ func main() {
 	r.GET("/health", health.GetHealthCheckHandler())
 	r.POST("/api/users", auth.GetDBCreateUserHandler(db))
 	r.POST("/api/login", auth.GetDBLoginUserHandler(db, cfg))
+	r.POST("/api/characters", auth.GetJWTAuthRequiredMiddleware(cfg), characters.GetDBCreateCharacterHandler(db))
 	r.GET("/protected-health", auth.GetJWTAuthRequiredMiddleware(cfg), health.GetHealthCheckHandler())
 
 	if err := r.Run(); err != nil {
