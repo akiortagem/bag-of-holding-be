@@ -8,6 +8,14 @@ type RefreshTokenCreateParams struct {
 	ExpiresAt time.Time
 }
 
+type RefreshTokenGetParams struct {
+	Token string
+}
+
+type RefreshTokenRevokeParams struct {
+	Token string
+}
+
 type RefreshToken struct {
 	Token     string
 	CreatedAt time.Time
@@ -16,4 +24,3 @@ type RefreshToken struct {
 	ExpiresAt time.Time
 	RevokedAt *time.Time
 }
-

@@ -35,6 +35,18 @@ func GetDBLoginUserHandler(db *sql.DB, cfg config.ApiConfig) func(c *gin.Context
 	}
 }
 
+func GetDBRefreshTokenHandler(db *sql.DB, cfg config.ApiConfig) func(c *gin.Context) {
+	uc := usecase.RefreshTokenUsecase{
+		Service: &repositories.DBAuthService{
+			Db: db,
+		},
+	}
+
+	return func(c *gin.Context) {
+		handlers.RefreshTokenHandler(c, &uc, cfg)
+	}
+}
+
 func GetJWTAuthRequiredMiddleware(cfg config.ApiConfig) gin.HandlerFunc {
 	return middelwares.AuthRequired(cfg)
 }

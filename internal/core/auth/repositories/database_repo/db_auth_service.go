@@ -62,6 +62,35 @@ func (s *DBAuthService) CreateRefreshToken(ctx context.Context, params domain.Re
 	}, nil
 }
 
+func (s *DBAuthService) GetRefreshToken(ctx context.Context, params domain.RefreshTokenGetParams) (domain.RefreshToken, error) {
+	dbToken, err := queries.GetRefreshTokenQuery(ctx, s.Db, queries.DatabaseRefreshTokenGetParams{
+		Token: params.Token,
+	})
+	if err != nil {
+		return domain.RefreshToken{}, err
+	}
+
+	var revokedAt *time.Time
+	if dbToken.RevokedAt.Valid {
+		revokedAt = &dbToken.RevokedAt.Time
+	}
+
+	return domain.RefreshToken{
+		Token:     dbToken.Token,
+		CreatedAt: dbToken.CreatedAt,
+		UpdatedAt: dbToken.UpdatedAt,
+		UserID:    dbToken.UserID,
+		ExpiresAt: dbToken.ExpiresAt,
+		RevokedAt: revokedAt,
+	}, nil
+}
+
+func (s *DBAuthService) RevokeRefreshToken(ctx context.Context, params domain.RefreshTokenRevokeParams) error {
+	return queries.RevokeRefreshTokenQuery(ctx, s.Db, queries.DatabaseRefreshTokenRevokeParams{
+		Token: params.Token,
+	})
+}
+
 func (s *DBAuthService) GetUserByEmail(ctx context.Context, params domain.UserGetByEmailParams) (domain.User, error) {
 	dbUser, err := queries.GetUserByEmailQuery(ctx, s.Db, queries.DatabaseUserGetByEmailParams{
 		Email: params.Email,

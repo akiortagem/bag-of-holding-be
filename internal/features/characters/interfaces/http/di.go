@@ -18,3 +18,13 @@ func GetDBCreateCharacterHandler(database *sql.DB) func(c *gin.Context) {
 		})
 	}
 }
+
+func GetDBListCharactersHandler(database *sql.DB) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		handlers.ListCharacterHandler(c, &usecases.ListCharactersUsecase{
+			Service: &db.DBCharacterService{
+				Db: database,
+			},
+		})
+	}
+}

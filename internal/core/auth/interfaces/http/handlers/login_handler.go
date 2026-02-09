@@ -28,5 +28,23 @@ func LoginHandler(c *gin.Context, loginer *usecase.LoginUserUsecase, cfg config.
 		return
 	}
 
+	needHttps := false
+
+	if !cfg.IsDebug() {
+		needHttps = true
+	}
+
+	c.SetSameSite(http.SameSiteLaxMode)
+
+	c.SetCookie(
+		"refresh",
+		resp.RefreshToken,
+		3600*24*7, // one week
+		"/api/refresh",
+		"",
+		needHttps,
+		true,
+	)
+
 	c.JSON(200, resp)
 }
